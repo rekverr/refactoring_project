@@ -1,7 +1,7 @@
 import { InMemoryRepository } from '../src/storage/Repository';
 import { BookRepository } from '../src/storage/BookRepository';
 import { UserRepository } from '../src/storage/UserRepository';
-import { seedBook, seedUser, InMemoryBookRepository } from './testFactory';
+import { seedBook, seedUser, makeSystem } from './testFactory';
 
 describe('In-memory repositories', () => {
   it.each(Array.from({ length: 60 }, (_, index) => index + 1))('saves and finds entity %i without leaking references', (id) => {
@@ -48,7 +48,7 @@ describe('Specialized repository branches', () => {
   });
 
   it('sorts waiting reservations by priority and date', () => {
-    const { reservations } = InMemoryBookRepository.makeSystem();
+    const { reservations } = makeSystem();
     reservations.save({ id: 'r-low', bookId: 'book-1', userId: 'u1', priority: 1, status: 'WAITING', createdAt: new Date('2026-01-02') });
     reservations.save({ id: 'r-high', bookId: 'book-1', userId: 'u2', priority: 5, status: 'WAITING', createdAt: new Date('2026-01-03') });
     reservations.save({ id: 'r-cancelled', bookId: 'book-1', userId: 'u3', priority: 99, status: 'CANCELLED', createdAt: new Date('2026-01-01') });
